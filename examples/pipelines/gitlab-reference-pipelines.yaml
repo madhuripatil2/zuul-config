@@ -1,0 +1,59 @@
+- pipeline:
+    name: check
+    description: |
+      Newly uploaded patchsets enter this pipeline to receive an
+      initial +/-1 Verified vote.
+    manager: independent
+    require:
+      gitlab.com:
+        open: true
+    trigger:
+      gitlab.com:
+        - event: gl_merge_request
+          action: comment
+          comment: (?i)^\s*recheck\s*$
+        - event: gl_merge_request
+          action:
+            - opened
+            - changed
+    success:
+      gitlab.com:
+        comment: true
+        approval: true
+      sqlreporter:
+    failure:
+      gitlab.com:
+        comment: true
+        approval: false
+      sqlreporter:
+    start:
+      gitlab.com:
+        comment: true
+        approval: false
+      sqlreporter:
+
+- pipeline:
+    name: post
+    post-review: true
+    manager: independent
+    trigger:
+      gitlab.com:
+        - event: gl_push
+          ref: ^refs/heads/.*$
+    success:
+      sqlreporter:
+    failure:
+      sqlreporter:
+
+- pipeline:
+    name: tag
+    post-review: true
+    manager: independent
+    trigger:
+      gitlab.com:
+        - event: gl_push
+          ref: ^refs/tags/.*$
+    success:
+      sqlreporter:
+    failure:
+      sqlreporter:
