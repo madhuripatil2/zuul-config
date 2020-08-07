@@ -1,0 +1,8 @@
+- job:
+    name: testjob
+    # branches makes this job run only for master PR
+    branch: master
+    node: 'ubuntu-bionic'
+    required-projects:
+      without options, the branch of the PR is used for the required-projects
+      - name: https://github.com/madhuripatil2/zuul-config/testjob.yaml
