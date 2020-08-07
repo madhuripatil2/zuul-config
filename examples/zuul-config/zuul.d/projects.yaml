@@ -9,7 +9,7 @@
     name: zuul-config
     check:
       jobs:
-        - noop
+        - testjob.yaml
     gate:
       jobs:
-        - noop
+        - testjob.yaml
